@@ -1,0 +1,4 @@
+[package]
+name = "lis-parse-rust"
+version = "0.1.0"
+authors = ["Bob Schmertz <rschmertz@yahoo.com>"]
