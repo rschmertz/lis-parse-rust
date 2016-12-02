@@ -1,6 +1,12 @@
 extern crate regex;
 use regex::Regex;
 
+use std::error::Error;
+use std::fs::File;
+use std::io::BufReader;
+use std::io::prelude::*;
+use std::path::Path;
+
 /*
     tokenizes a string in an EPOCH DB.  Assumptions:
 
@@ -37,6 +43,28 @@ fn test_tokenize() {
     let teststr2 = "one two    three \t four";
     let result2 = tokenize(teststr2);
     assert_eq!(result2, vec!("one", "two", "three", "four"));
+}
+
+#[test]
+fn test_line_get() {
+
+    let path = Path::new("./test/testfile.lis");
+    let display = path.display();
+
+    // Open the path in read-only mode, returns `io::Result<File>`
+    let file = match File::open(&path) {
+        // The `description` method of `io::Error` returns a string that describes the error
+        Err(why) => panic!("couldn't open {}: {}", display, Error::description(&why)),
+        Ok(file) => file,
+    };
+
+    // Collect all lines into a vector
+    let reader = BufReader::new(file);
+    let lines: Vec<_> = reader.lines().collect();
+
+    for l in lines {
+        println!("{}!", l.unwrap());
+    }
 }
 
 fn main() {
