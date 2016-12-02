@@ -4,6 +4,7 @@ use regex::Regex;
 use std::error::Error;
 use std::fs::File;
 use std::io::BufReader;
+use std::io::Lines;
 use std::io::prelude::*;
 use std::path::Path;
 
@@ -34,6 +35,13 @@ fn tokenize(s: &str) -> Vec<&str> {
     return tokens;
 }
 
+fn line_get(li: &mut Lines<BufReader<File>>) -> Option<String> {
+    let r = li.next();
+    // may need to clone string to return unmodified -- or not.....
+    let t = r.unwrap().unwrap();
+    Some(t)
+}
+
 #[test]
 fn test_tokenize() {
     println!("in test_tokenize");
@@ -58,13 +66,12 @@ fn test_line_get() {
         Ok(file) => file,
     };
 
-    // Collect all lines into a vector
     let reader = BufReader::new(file);
-    let lines: Vec<_> = reader.lines().collect();
+    let mut line_iter = reader.lines();
 
-    for l in lines {
-        println!("{}!", l.unwrap());
-    }
+    let line = line_get(&mut line_iter);
+    let s: String = line.unwrap();
+    assert!(s.ends_with("six"));
 }
 
 fn main() {
