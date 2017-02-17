@@ -1,3 +1,7 @@
+#[macro_use]
+extern crate clap;
+use clap::{App, Arg};
+
 extern crate regex;
 use regex::Regex;
 
@@ -75,5 +79,10 @@ fn test_line_get() {
 }
 
 fn main() {
+    App::new(crate_name!())
+            .version(crate_version!())
+            .about(crate_description!())
+            .author(crate_authors!())
+            .get_matches();
     println!("Hello, world!");
 }
