@@ -40,10 +40,34 @@ fn tokenize(s: &str) -> Vec<&str> {
 }
 
 fn line_get(li: &mut Lines<BufReader<File>>) -> Option<String> {
-    let r = li.next();
-    // may need to clone string to return unmodified -- or not.....
-    let t = r.unwrap().unwrap();
-    Some(t)
+
+    let mut nocomment_i = li.skip_while(|l| {
+        let test_line = l.as_ref().unwrap();
+            let trimmy = test_line.trim();
+            trimmy.is_empty() || trimmy.starts_with('#')
+    });
+    // let rew = li.next(); // no-no
+    let mut line_pieces: Vec<&str> = vec!();
+    /*
+    {
+        if t.starts_with('#') {
+            println!("{} starts with #", t);
+        } else {
+            println!("{} no starts with #", t);
+        }
+    }
+     */
+    while {
+        let r = nocomment_i.next();
+        let t = r.unwrap().unwrap();
+        let tt = t.trim(); // borrow occurs here
+        let has_continuation = tt.ends_with("\\");
+        line_pieces.push(&tt); // Doesn't compile b/c of this line: 
+        has_continuation
+    } {}; // `t` dropped here while still borrowed
+    println!("there are {} line pieces", line_pieces.len());
+    let vv = "hello".to_string();
+    Some(vv)
 }
 
 #[test]
@@ -74,6 +98,7 @@ fn test_line_get() {
     let mut line_iter = reader.lines();
 
     let line = line_get(&mut line_iter);
+    let line2 = line_get(&mut line_iter);
     let s: String = line.unwrap();
     assert!(s.ends_with("six"));
 }
