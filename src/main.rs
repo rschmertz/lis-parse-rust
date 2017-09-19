@@ -47,7 +47,7 @@ fn line_get(li: &mut Lines<BufReader<File>>) -> Option<String> {
             trimmy.is_empty() || trimmy.starts_with('#')
     });
     // let rew = li.next(); // no-no
-    let mut line_pieces: Vec<&str> = vec!();
+    let mut line_pieces: Vec<String> = vec!();
     /*
     {
         if t.starts_with('#') {
@@ -60,11 +60,10 @@ fn line_get(li: &mut Lines<BufReader<File>>) -> Option<String> {
     while {
         let r = nocomment_i.next();
         let t = r.unwrap().unwrap();
-        let tt = t.trim(); // borrow occurs here
-        let has_continuation = tt.ends_with("\\");
-        line_pieces.push(&tt); // Doesn't compile b/c of this line: 
-        has_continuation
-    } {}; // `t` dropped here while still borrowed
+        let tt = t.trim().into(); // auto-figures out what type tt should be
+        line_pieces.push(tt);
+        line_pieces.last().unwrap().ends_with("\\")
+    } {};
     println!("there are {} line pieces", line_pieces.len());
     let vv = "hello".to_string();
     Some(vv)
