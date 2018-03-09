@@ -65,7 +65,7 @@ fn line_get(li: &mut Lines<BufReader<File>>) -> Option<String> {
         line_pieces.last().unwrap().ends_with("\\")
     } {};
     println!("there are {} line pieces", line_pieces.len());
-    let vv = "hello".to_string();
+    let vv = line_pieces.join(" ");
     Some(vv)
 }
 
