@@ -60,9 +60,15 @@ fn line_get(li: &mut Lines<BufReader<File>>) -> Option<String> {
     while {
         let r = nocomment_i.next();
         let t = r.unwrap().unwrap();
-        let tt = t.trim().into(); // auto-figures out what type tt should be
-        line_pieces.push(tt);
-        line_pieces.last().unwrap().ends_with("\\")
+        let tt: String = t.trim().into();
+        
+        let continued_line = tt.ends_with('\\');
+        line_pieces.push(if continued_line {
+            tt.chars().take(tt.len() - 2).collect()
+        } else {
+            tt
+        });
+        continued_line
     } {};
     println!("there are {} line pieces", line_pieces.len());
     let vv = line_pieces.join(" ");
@@ -99,6 +105,7 @@ fn test_line_get() {
     let line = line_get(&mut line_iter);
     let line2 = line_get(&mut line_iter);
     let s: String = line.unwrap();
+    println!("The first string is {}", s);
     assert!(s.ends_with("six"));
 }
 
