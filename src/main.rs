@@ -39,7 +39,8 @@ fn tokenize(s: &str) -> Vec<&str> {
     return tokens;
 }
 
-fn line_get(li: &mut Lines<BufReader<File>>) -> Option<String> {
+
+fn line_get(li: &mut Lines<impl BufRead>) -> Option<String> {
 
     let mut nocomment_i = li.skip_while(|l| {
         let test_line = l.as_ref().unwrap();
